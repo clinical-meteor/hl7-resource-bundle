@@ -58,6 +58,7 @@ JsonRoutes.add("get", "/fhir/Bundle", function (req, res, next) { process.env.DE
 
     process.env.DEBUG && console.log('databaseQuery', databaseQuery);
     process.env.DEBUG && console.log('Bundles.find(id)', Bundles.find(databaseQuery).fetch()); // because we're using BaseModel and a _transform() function
+
     // Bundles returns an object instead of a pure JSON document // it stores a shadow reference of the original doc, which we're removing here
     var BundleData = Bundles.find(databaseQuery).fetch();
     BundleData.forEach(function(patient){
