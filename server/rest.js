@@ -1,13 +1,17 @@
+var fhirVersion = 'fhir-3.0.0';
 
-JsonRoutes.Middleware.use(
-    '/api/*',
+if(typeof oAuth2Server === 'object'){
+  // TODO:  double check that this is needed; and that the /api/ route is correct
+  JsonRoutes.Middleware.use(
+    // '/api/*',
+    '/fhir-3.0.0/*',
     oAuth2Server.oauthserver.authorise()   // OAUTH FLOW - A7.1
-);
+  );
+}
 
 
 
-
-JsonRoutes.add("get", "/fhir/Bundle/:id", function (req, res, next) { process.env.DEBUG && console.log('GET /fhir/Bundle/' + req.params.id);
+JsonRoutes.add("get", "/" + fhirVersion + "/Bundle/:id", function (req, res, next) { process.env.DEBUG && console.log('GET /fhir/Bundle/' + req.params.id);
   res.setHeader("Access-Control-Allow-Origin", "*");
 
   var accessTokenStr = (req.params && req.params.access_token) || (req.query && req.query.access_token);
@@ -39,7 +43,7 @@ JsonRoutes.add("get", "/fhir/Bundle/:id", function (req, res, next) { process.en
 
 
 
-JsonRoutes.add("get", "/fhir/Bundle", function (req, res, next) { process.env.DEBUG && console.log('GET /fhir/Bundle', req.query);
+JsonRoutes.add("get", "/" + fhirVersion + "/Bundle", function (req, res, next) { process.env.DEBUG && console.log('GET /fhir/Bundle', req.query);
   res.setHeader("Access-Control-Allow-Origin", "*");
 
   var accessTokenStr = (req.params && req.params.access_token) || (req.query && req.query.access_token);
