@@ -10,7 +10,7 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/clinical-meteor/hl7-resource-audit-event
+    working_directory: ~/clinical-meteor/hl7-resource-bundle
     parallelism: 1
     shell: /bin/bash --login
 
@@ -109,9 +109,9 @@ jobs:
 
     - run: cd ../baseline && meteor npm install
     - run: cd ../baseline && meteor npm install react simpl-schema
-    - run: cd ../baseline && mkdir packages && cd packages && mkdir hl7-resource-audit-event
-    - run: cp -R ./* ../baseline/packages/hl7-resource-audit-event
-    - run: cd ../baseline/packages/hl7-resource-audit-event&& pwd
+    - run: cd ../baseline && mkdir packages && cd packages && mkdir hl7-resource-bundle
+    - run: cp -R ./* ../baseline/packages/hl7-resource-bundle
+    - run: cd ../baseline/packages/hl7-resource-bundle&& pwd
     - run: cd ../baseline/packages && ls -la
 
     - run: cd ../baseline && npm i --save-dev selenium-webdriver@3.6.0 chromedriver
