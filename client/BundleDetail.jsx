@@ -152,6 +152,7 @@ export class BundleDetail extends React.Component {
     let data = {
       bundleId: this.props.bundleId,
       bundle: false,
+      bundelContent: '',
       form: this.state.form
     };
 
@@ -161,6 +162,8 @@ export class BundleDetail extends React.Component {
     if(this.props.displayBirthdate){
       data.displayBirthdate = this.props.displayBirthdate;
     }
+
+    data.bundleContent = JSON.stringify(Bundles.findOne(this.props.bundleId), null, 2);
 
     if(process.env.NODE_ENV === "test") console.log("BundleDetail[data]", data);
     return data;
@@ -173,29 +176,41 @@ export class BundleDetail extends React.Component {
     return (
       <div id={this.props.id} className="bundleDetail">
         <CardText>
+
           <Row>
             <Col md={4}>
               <TextField
-                id='mrnInput'
+                id='identifier'
                 ref='identifier'
                 name='identifier'
-                floatingLabelText='Identifier (Medical Record Number)'
+                floatingLabelText='Identifier'
                 value={ get(formData, 'identifier', '')}
                 onChange={ this.changeState.bind(this, 'identifier')}
                 floatingLabelFixed={true}
                 fullWidth
                 /><br/>
             </Col>
-            <Col md={3} mdOffset={5}>
-              <br />
-              <Toggle
-                label="Deceased"
-                labelPosition="right"
-                defaultToggled={false}
-                style={styles.toggle}
-              />
+            <Col md={8}>
+              <TextField
+                  id='title'
+                  ref='title'
+                  name='title'
+                  floatingLabelText='Title'
+                  value={ get(formData, 'title', '')}
+                  onChange={ this.changeState.bind(this, 'title')}
+                  floatingLabelFixed={true}
+                  fullWidth
+                  /><br/>
             </Col>
           </Row>
+          <Row>
+            <textarea 
+              value={this.data.bundleContent}
+              style={{maxHeight: '500px', width: '100%'}}
+            />
+          </Row>
+
+          {/* 
           <Row>
             <Col md={1}>
               <TextField
@@ -280,8 +295,6 @@ export class BundleDetail extends React.Component {
                 /><br/>
             </Col>
             <Col md={3}>
-              {/* <br />
-              { this.renderDatePicker(true, get(formData, 'birthDate') ) } */}
 
               <TextField
                 id='birthDateInput'
@@ -289,7 +302,6 @@ export class BundleDetail extends React.Component {
                 name='birthDate'
                 type='date'
                 floatingLabelText='Birthdate'
-                // hintText='YYYY-MM-DD'
                 value={ get(formData, 'birthDate', '')}
                 onChange={ this.changeState.bind(this, 'birthDate')}
                 floatingLabelFixed={true}
@@ -346,7 +358,7 @@ export class BundleDetail extends React.Component {
                 fullWidth
                 /><br/>
             </Col>
-          </Row>
+          </Row> */}
 
 
         </CardText>
@@ -356,36 +368,7 @@ export class BundleDetail extends React.Component {
       </div>
     );
   }
-  renderDatePicker(displayDatePicker, birthDate){
-    if (displayDatePicker) {
-      console.log('renderDatePicker', displayDatePicker, birthDate, typeof birthDate)
 
-      let javascriptDate;
-      let momentDate;
-
-      if(typeof birthDate === "string"){
-        momentDate = moment(birthDate).toDate();
-      } else {
-        momentDate = birthDate;
-      }
-    
-      console.log('javascriptDate', javascriptDate)
-      console.log('momentDate', momentDate)
-
-      return (
-        <DatePicker 
-          name='birthDate'
-          hintText="Birthdate" 
-          container="inline" 
-          mode="landscape"
-          value={ momentDate ? momentDate : null}    
-          onChange={ this.changeState.bind(this, 'birthDate')}      
-          floatingLabelFixed={true}
-          fullWidth
-        />
-      );
-    }
-  }
   determineButtons(bundleId){
     if (bundleId) {
       return (
@@ -405,44 +388,11 @@ export class BundleDetail extends React.Component {
     if(process.env.NODE_ENV === "test") console.log("BundleDetail.updateFormData", formData, field, textValue);
 
     switch (field) {
-      case "prefix":
-        set(formData, 'prefix', textValue)
-        break;
-      case "family":
-        set(formData, 'family', textValue)
-        break;
-      case "given":
-        set(formData, 'given', textValue)
-        break;        
-      case "suffix":
-        set(formData, 'suffix', textValue)
+      case "title":
+        set(formData, 'title', textValue)
         break;
       case "identifier":
         set(formData, 'identifier', textValue)
-        break;
-      case "gender":
-        set(formData, 'gender', textValue)
-        break;
-      case "maritalStatus":
-        set(formData, 'maritalStatus', textValue)
-        break;
-      case "deceased":
-        set(formData, 'deceased', textValue)
-        break;
-      case "multipleBirth":
-        set(formData, 'multipleBirth', textValue)
-        break;
-      case "species":
-        set(formData, 'species', textValue)
-        break;
-      case "language":
-        set(formData, 'language', textValue)
-        break;
-      case "photo":
-        set(formData, 'photo', textValue)
-        break;
-      case "birthDate":
-        set(formData, 'birthDate', textValue)
         break;
       default:
     }
@@ -454,44 +404,11 @@ export class BundleDetail extends React.Component {
     if(process.env.NODE_ENV === "test") console.log("BundleDetail.updateBundle", bundleData, field, textValue);
 
     switch (field) {
-      case "prefix":
-        set(bundleData, 'name[0].prefix[0]', textValue)
-        break;
-      case "family":
-        set(bundleData, 'name[0].family[0]', textValue)
-        break;
-      case "given":
-        set(bundleData, 'name[0].given[0]', textValue)
-        break;        
-      case "suffix":
-        set(bundleData, 'name[0].suffix[0]', textValue)
+      case "title":
+        set(bundleData, 'title', textValue)
         break;
       case "identifier":
         set(bundleData, 'identifier[0].value', textValue)
-        break;
-      case "deceased":
-        set(bundleData, 'deceasedBoolean', textValue)
-        break;
-      case "multipleBirth":
-        set(bundleData, 'multipleBirthBoolean', textValue)
-        break;
-      case "gender":
-        set(bundleData, 'gender', textValue)
-        break;
-      case "maritalStatus":
-        set(bundleData, 'maritalStatus.text', textValue)
-        break;
-      case "species":
-        set(bundleData, 'animal.species.text', textValue)
-        break;
-      case "language":
-        set(bundleData, 'communication[0].language.text', textValue)
-        break;  
-      case "photo":
-        set(bundleData, 'photo[0].url', textValue)
-        break;
-      case "birthDate":
-        set(bundleData, 'birthDate', textValue)
         break;
     }
     return bundleData;

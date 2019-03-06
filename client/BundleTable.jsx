@@ -15,41 +15,19 @@ flattenBundle = function(person){
     _id: person._id,
     id: person.id,
     active: true,
-    gender: get(person, 'gender'),
-    name: '',
-    mrn: '',
-    birthDate: '',
-    photo: "/thumbnail-blank.png",
-    initials: 'abc'
+    subject: '',
+    author: '',
+    title: '',
+    date: ''
   };
 
-  result.active = get(person, 'active', true).toString();
+  result.subject = get(person, 'entry[0].resource.subject.display', true).toString();
+  result.author = get(person, 'entry[0].resource.author[0].display', true).toString();
+  result.title = get(person, 'entry[0].resource.title', true).toString();
 
   // there's an off-by-1 error between momment() and Date() that we want
   // to account for when converting back to a string
-  result.birthDate = moment(person.birthDate).format("YYYY-MM-DD")
-  result.photo = get(person, 'photo[0].url', '');
-  result.identifier = get(person, 'identifier[0].value', '');
-
-  result.maritalStatus = get(person, 'maritalStatus.text', '');
-  result.deceased = get(person, 'deceasedBoolean', '');
-  result.species = get(person, 'animal.species.text', '');
-  result.language = get(person, 'communication[0].language.text', '');
-
-  let nameText = get(person, 'name[0].text', '');
-  if(nameText.length > 0){
-    result.name = get(person, 'name[0].text', '');    
-  } else {
-    if(get(person, 'name[0].suffix[0]')){
-      result.name = get(person, 'name[0].suffix[0]')  + ' ';
-    }
-
-    result.name = result.name + get(person, 'name[0].given[0]') + ' ' + get(person, 'name[0].family[0]');
-    
-    if(get(person, 'name[0].suffix[0]')){
-      result.name = result.name + ' ' + get(person, 'name[0].suffix[0]');
-    }
-  }
+  result.date = moment(person.date).format("YYYY-MM-DD")
 
   return result;
 }
@@ -69,7 +47,7 @@ export class BundleTable extends React.Component {
           visibility: 'visible',
           display: 'table',
           paddingTop: '16px',
-          maxWidth: 'ß120px'ß
+          maxWidth: '120px'
         },
         cell: {
           paddingTop: '16px'
@@ -113,20 +91,7 @@ export class BundleTable extends React.Component {
       });
     }
 
-
-    if (Session.get('appWidth') < 768) {
-      data.style.hideOnPhone.visibility = 'hidden';
-      data.style.hideOnPhone.display = 'none';
-      data.style.cellHideOnPhone.visibility = 'hidden';
-      data.style.cellHideOnPhone.display = 'none';
-    } else {
-      data.style.hideOnPhone.visibility = 'visible';
-      data.style.hideOnPhone.display = 'table-cell';
-      data.style.cellHideOnPhone.visibility = 'visible';
-      data.style.cellHideOnPhone.display = 'table-cell';
-    }
-
-    // console.log("BundleTable[data]", data);
+    console.log("BundleTable[data]", data);
     return data;
   }
   imgError(avatarId) {
@@ -135,7 +100,11 @@ export class BundleTable extends React.Component {
   rowClick(id){
     Session.set('bundlesUpsert', false);
     Session.set('selectedBundleId', id);
-    Session.set('bundlePageTabIndex', 2);
+    // Session.set('bundlePageTabIndex', 2);
+
+    console.log('rowClick', Bundles.findOne(id));
+
+    // Session.set('dataContent', dataContent);   
   }
   renderRowAvatarHeader(){
     if (get(Meteor, 'settings.public.defaults.avatars') && (this.props.showAvatars === true)) {
@@ -223,19 +192,11 @@ export class BundleTable extends React.Component {
       for (var i = 0; i < this.data.bundles.length; i++) {
         tableRows.push(
           <tr key={i} className="bundleRow" style={{cursor: "pointer"}} onClick={this.selectBundleRow.bind(this, this.data.bundles[i].id )} >
-  
-            { this.renderRowAvatar(this.data.bundles[i], this.data.style.avatar) }
-  
-            <td className='identifier' style={this.data.style.cellHideOnPhone}>{this.data.bundles[i].identifier}</td>
-            <td className='name' onClick={ this.rowClick.bind('this', this.data.bundles[i]._id)} style={this.data.style.cell}>{this.data.bundles[i].name }</td>
-            <td className='gender' onClick={ this.rowClick.bind('this', this.data.bundles[i]._id)} style={this.data.style.cell}>{this.data.bundles[i].gender}</td>
+            <td className='identifier' style={this.data.style.cell}>{this.data.bundles[i].identifier}</td>
+            <td className='title' onClick={ this.rowClick.bind('this', this.data.bundles[i]._id)} style={this.data.style.cell}>{this.data.bundles[i].title }</td>
+            <td className='subject' onClick={ this.rowClick.bind('this', this.data.bundles[i]._id)} style={this.data.style.cell}>{this.data.bundles[i].subject }</td>
+            <td className='author' onClick={ this.rowClick.bind('this', this.data.bundles[i]._id)} style={this.data.style.cell}>{this.data.bundles[i].author }</td>
             <td className='birthDate' onClick={ this.rowClick.bind('this', this.data.bundles[i]._id)} style={{minWidth: '100px', paddingTop: '16px'}}>{this.data.bundles[i].birthDate }</td>
-            <td className='maritalStatus' style={this.data.style.cellHideOnPhone}>{this.data.bundles[i].maritalStatus}</td>
-            <td className='language' style={this.data.style.cellHideOnPhone}>{this.data.bundles[i].language}</td>
-            <td className='isActive' onClick={ this.rowClick.bind('this', this.data.bundles[i]._id)} style={this.data.style.cellHideOnPhone}>{this.data.bundles[i].active}</td>
-
-              { this.renderSpeciesRow(this.props.displaySpecies, this.data.bundles[i]) }
-              { this.renderSendButton(this.data.bundles[i], this.data.style.avatar) }
           </tr>
         );
       }
@@ -248,18 +209,11 @@ export class BundleTable extends React.Component {
         <Table id='bundlesTable' hover >
           <thead>
             <tr>
-              { this.renderRowAvatarHeader() }
-
-              <th className='identifier' style={this.data.style.hideOnPhone}>Identifier</th>
-              <th className='name'>Name</th>
-              <th className='gender'>Gender</th>
-              <th className='birthdate' style={{minWidth: '100px'}}>Birthdate</th>
-              <th className='maritalStatus' style={this.data.style.hideOnPhone}>Marital Status</th>
-              <th className='language' style={this.data.style.hideOnPhone}>Language</th>
-              <th className='isActive' style={this.data.style.hideOnPhone}>Active</th>
-              
-              { this.renderSpeciesHeader(this.props.displaySpecies) }
-              { this.renderSendButtonHeader() }
+              <th className='identifier'>Identifier</th>
+              <th className='author'>Title</th>
+              <th className='subject'>Subject</th>
+              <th className='author'>Author</th>
+              <th className='birthdate' style={{minWidth: '100px'}}>Date</th>
             </tr>
           </thead>
           <tbody>

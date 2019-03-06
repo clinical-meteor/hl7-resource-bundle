@@ -1,5 +1,4 @@
-import { CardText, CardTitle } from 'material-ui/Card';
-import { Tab, Tabs } from 'material-ui/Tabs';
+import { CardText, CardTitle, Tab, Tabs } from 'material-ui';
 import { Glass, GlassCard, VerticalCanvas, FullPageCanvas } from 'meteor/clinical:glass-ui';
 
 import BundleDetail from './BundleDetail';
@@ -11,6 +10,9 @@ import PropTypes from 'prop-types';
 
 import { Meteor } from 'meteor/meteor';
 import { Session } from 'meteor/session';
+
+import { Bundles, BundleSchema } from '../lib/Bundles.js';
+import { Grid, Col, Row } from 'react-bootstrap';
 
 let defaultBundle = {
   index: 2,
@@ -68,43 +70,43 @@ export class BundlesPage extends React.Component {
     Session.set('bundleUpsert', false);
   }
 
+
   render() {
     console.log('React.version: ' + React.version);
     return (
       <div id="bundlesPage">
-        <VerticalCanvas>
-          <GlassCard height="auto">
-            <CardTitle
-              title="Bundles"
-            />
-            <CardText>
-              <Tabs id='bundlesPageTabs' default value={this.data.tabIndex} onChange={this.handleTabChange} initialSelectedIndex={1}>
-                 <Tab className="newBundleTab" label='New' style={this.data.style.tab} onActive={ this.onNewTab } value={0}>
-                   <BundleDetail 
-                      fhirVersion={ this.data.fhirVersion }
-                      id='newBundle' />
-                 </Tab>
-                 <Tab className="bundleListTab" label='Bundles' onActive={this.handleActive} style={this.data.style.tab} value={1}>
-                   <BundleTable 
-                      showBarcodes={true} 
-                      showAvatars={true} 
-                      noDataMessagePadding={100}
-                      />
-                 </Tab>
-                 <Tab className="bundleDetailTab" label='Detail' onActive={this.handleActive} style={this.data.style.tab} value={2}>
-                   <BundleDetail 
-                      id='bundleDetails' 
-                      fhirVersion={ this.data.fhirVersion }
-                      bundle={ this.data.selectedBundle }
-                      bundleId={ this.data.selectedBundleId }
-                    />
-                 </Tab>
-             </Tabs>
+        <FullPageCanvas>
+          <Col md={6}>
+            <GlassCard height="auto">
+              <CardTitle
+                title="Bundles"
+              />
+              <CardText>
+                <BundleTable 
+                  showBarcodes={true} 
+                  showAvatars={true} 
+                  noDataMessagePadding={100}
+                  />
+              </CardText>
+            </GlassCard>
+          </Col>
+          <Col md={6}>
+            <GlassCard height="auto">
+              {/* <CardTitle
+                title="Bundles"
+              /> */}
+              <CardText>
+                <BundleDetail 
+                  id='bundleDetails' 
+                  fhirVersion={ this.data.fhirVersion }
+                  bundle={ this.data.selectedBundle }
+                  bundleId={ this.data.selectedBundleId }
+                />
+              </CardText>
+            </GlassCard>
 
-
-            </CardText>
-          </GlassCard>
-        </VerticalCanvas>
+          </Col>
+        </FullPageCanvas>
       </div>
     );
   }
@@ -113,5 +115,4 @@ export class BundlesPage extends React.Component {
 
 
 ReactMixin(BundlesPage.prototype, ReactMeteorData);
-
 export default BundlesPage;
