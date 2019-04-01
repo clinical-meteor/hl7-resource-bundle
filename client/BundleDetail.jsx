@@ -204,10 +204,9 @@ export class BundleDetail extends React.Component {
             </Col>
           </Row>
           <Row>
-            <textarea 
-              value={this.data.bundleContent}
-              style={{maxHeight: '500px', width: '100%'}}
-            />
+            <pre style={{maxHeight: '500px', width: '100%', height: '100%'}}>
+              {this.data.bundleContent}              
+            </pre>
           </Row>
 
           {/* 
