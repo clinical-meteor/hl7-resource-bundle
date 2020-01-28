@@ -1,13 +1,14 @@
-import Avatar from 'material-ui/Avatar';
-import FlatButton from 'material-ui/FlatButton';
+import { 
+  Button
+} from '@material-ui/core';
+
 import { HTTP } from 'meteor/http';
 import React from 'react';
 import { ReactMeteorData } from 'meteor/react-meteor-data';
 import ReactMixin from 'react-mixin';
 import { Table } from 'react-bootstrap';
 import { Session } from 'meteor/session';
-import { has, get } from 'lodash';
-import { TableNoData } from 'meteor/clinical:glass-ui'
+import { get } from 'lodash';
 import PropTypes from 'prop-types';
 
 flattenBundle = function(person){
@@ -91,7 +92,7 @@ export class BundleTable extends React.Component {
       });
     }
 
-    console.log("BundleTable[data]", data);
+    logger.trace("BundleTable[data]", data);
     return data;
   }
   imgError(avatarId) {
@@ -102,7 +103,7 @@ export class BundleTable extends React.Component {
     Session.set('selectedBundleId', id);
     // Session.set('bundlePageTabIndex', 2);
 
-    console.log('rowClick', Bundles.findOne(id));
+    logger.debug('BundleTable.rowClick', Bundles.findOne(id));
 
     // Session.set('dataContent', dataContent);   
   }
@@ -152,7 +153,7 @@ export class BundleTable extends React.Component {
     if (this.props.showSendButton === true) {
       return (
         <td className='sendButton' style={this.data.style.hideOnPhone}>
-          <FlatButton label="send" onClick={this.onSend.bind('this', this.data.bundles[i]._id)}/>
+          <Button onClick={this.onSend.bind('this', this.data.bundles[i]._id)}>Send</Button>
         </td>
       );
     }
@@ -160,7 +161,7 @@ export class BundleTable extends React.Component {
   onSend(id){
     let bundle = Bundles.findOne({_id: id});
 
-    console.log("BundleTable.onSend()", bundle);
+    logger.debug("BundleTable.onSend()", bundle);
 
     var httpEndpoint = "http://localhost:8080";
     if (get(Meteor, 'settings.public.interfaces.default.channel.endpoint')) {
@@ -170,10 +171,10 @@ export class BundleTable extends React.Component {
       data: bundle
     }, function(error, result){
       if (error) {
-        console.log("error", error);
+        logger.error("error", error);
       }
       if (result) {
-        console.log("result", result);
+        logger.trace("result", result);
       }
     });
   }
@@ -187,7 +188,8 @@ export class BundleTable extends React.Component {
     let footer;
 
     if(this.data.bundles.length === 0){
-      footer = <TableNoData noDataPadding={ this.props.noDataMessagePadding } />
+      logger.trace('EncountersTable:  No encounters to render.');
+      // footer = <TableNoData noDataPadding={ this.props.noDataMessagePadding } />
     } else {
       for (var i = 0; i < this.data.bundles.length; i++) {
         tableRows.push(
@@ -202,8 +204,6 @@ export class BundleTable extends React.Component {
       }
     }
     
-
-
     return(
       <div>
         <Table id='bundlesTable' hover >
@@ -233,6 +233,9 @@ BundleTable.propTypes = {
   displaySpecies: PropTypes.bool,
   noDataMessagePadding: PropTypes.number
 };
+BundleTable.defaultProps = {
+  fhirVersion: 'R4'
+}
 
 ReactMixin(BundleTable.prototype, ReactMeteorData);
 export default BundleTable;

@@ -1,5 +1,19 @@
-import { CardText, CardTitle, Tab, Tabs } from 'material-ui';
-import { Glass, GlassCard, VerticalCanvas, FullPageCanvas } from 'meteor/clinical:glass-ui';
+
+import { 
+  CssBaseline,
+  Grid, 
+  Container,
+  Divider,
+  Card,
+  CardHeader,
+  CardContent,
+  Button,
+  Tab, 
+  Tabs,
+  Typography,
+  Box
+} from '@material-ui/core';
+import { StyledCard, PageCanvas } from 'material-fhir-ui';
 
 import BundleDetail from './BundleDetail';
 import BundleTable from './BundleTable';
@@ -12,7 +26,7 @@ import { Meteor } from 'meteor/meteor';
 import { Session } from 'meteor/session';
 
 import { Bundles, BundleSchema } from '../lib/Bundles.js';
-import { Grid, Col, Row } from 'react-bootstrap';
+
 
 let defaultBundle = {
   index: 2,
@@ -52,10 +66,9 @@ export class BundlesPage extends React.Component {
       data.selectedBundle = false;
     }
 
-
-    data.style = Glass.blur(data.style);
-    data.style.appbar = Glass.darkroom(data.style.appbar);
-    data.style.tab = Glass.darkroom(data.style.tab);
+    // data.style = Glass.blur(data.style);
+    // data.style.appbar = Glass.darkroom(data.style.appbar);
+    // data.style.tab = Glass.darkroom(data.style.tab);
 
     if(process.env.NODE_ENV === "test") console.log("BundlesPage[data]", data);
     return data;
@@ -72,47 +85,53 @@ export class BundlesPage extends React.Component {
 
 
   render() {
-    console.log('React.version: ' + React.version);
+    // console.log('React.version: ' + React.version);
+
+
+    let headerHeight = 64;
+    if(get(Meteor, 'settings.public.defaults.prominantHeader', false)){
+      headerHeight = 128;
+    }
+
     return (
       <div id="bundlesPage">
-        <FullPageCanvas>
-          <Col md={6}>
-            <GlassCard height="auto">
-              <CardTitle
-                title="Bundles"
-              />
-              <CardText>
-                <BundleTable 
-                  showBarcodes={true} 
-                  showAvatars={true} 
-                  noDataMessagePadding={100}
-                  />
-              </CardText>
-            </GlassCard>
-          </Col>
-          <Col md={6}>
-            <GlassCard height="auto">
-              {/* <CardTitle
-                title="Bundles"
-              /> */}
-              <CardText>
-                <BundleDetail 
-                  id='bundleDetails' 
-                  fhirVersion={ this.data.fhirVersion }
-                  bundle={ this.data.selectedBundle }
-                  bundleId={ this.data.selectedBundleId }
+        <StyledCard height="auto" scrollable={true} margin={20} headerHeight={headerHeight} >
+          <Grid container spacing={3}>
+            <Grid item xs={6}>
+              <Card height="auto">
+                <CardHeader
+                  title="Bundles"
                 />
-              </CardText>
-            </GlassCard>
-
-          </Col>
-        </FullPageCanvas>
+                <CardContent>
+                  <BundleTable 
+                    showBarcodes={true} 
+                    showAvatars={true} 
+                    noDataMessagePadding={100}
+                    />
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={6}>
+              <Card height="auto">
+                {/* <CardHeader
+                  title="Bundles"
+                /> */}
+                <CardContent>
+                  <BundleDetail 
+                    id='bundleDetails' 
+                    fhirVersion={ this.data.fhirVersion }
+                    bundle={ this.data.selectedBundle }
+                    bundleId={ this.data.selectedBundleId }
+                  />
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+        </StyledCard>
       </div>
     );
   }
 }
-
-
 
 ReactMixin(BundlesPage.prototype, ReactMeteorData);
 export default BundlesPage;

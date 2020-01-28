@@ -1,4 +1,10 @@
-import { CardActions, CardText, DatePicker, Toggle, RaisedButton, TextField } from 'material-ui';
+import { 
+  Button,
+  CardHeader,
+  CardContent,
+  TextField
+} from '@material-ui/core';
+
 import { get, has, set } from 'lodash';
 import { Row, Col } from 'react-bootstrap';
 import moment from 'moment';
@@ -175,13 +181,11 @@ export class BundleDetail extends React.Component {
 
     return (
       <div id={this.props.id} className="bundleDetail">
-        <CardText>
-
-          <Row>
-            <Col md={4}>
+        <CardContent>
+          <Grid container spacing={3}>
+            <Grid item xs={4}>
               <TextField
-                id='identifier'
-                ref='identifier'
+                id='identifier'                
                 name='identifier'
                 floatingLabelText='Identifier'
                 value={ get(formData, 'identifier', '')}
@@ -189,32 +193,30 @@ export class BundleDetail extends React.Component {
                 floatingLabelFixed={true}
                 fullWidth
                 /><br/>
-            </Col>
-            <Col md={8}>
+            </Grid>
+            <Grid item xs={8}>
               <TextField
-                  id='title'
-                  ref='title'
-                  name='title'
-                  floatingLabelText='Title'
-                  value={ get(formData, 'title', '')}
-                  onChange={ this.changeState.bind(this, 'title')}
-                  floatingLabelFixed={true}
-                  fullWidth
-                  /><br/>
-            </Col>
-          </Row>
-          <Row>
+                id='title'                  
+                name='title'
+                floatingLabelText='Title'
+                value={ get(formData, 'title', '')}
+                onChange={ this.changeState.bind(this, 'title')}
+                floatingLabelFixed={true}
+                fullWidth
+                /><br/>
+            </Grid>
+          </Grid>
+          <Grid container spacing={3}>
             <pre style={{maxHeight: '500px', width: '100%', height: '100%'}}>
               {this.data.bundleContent}              
             </pre>
-          </Row>
+          </Grid>       
 
           {/* 
           <Row>
             <Col md={1}>
               <TextField
-                id='prefixInput'
-                ref='prefix'
+                id='prefixInput'                
                 name='prefix'
                 floatingLabelText='Prefix'
                 value={ get(formData, 'prefix', '')}
@@ -226,8 +228,7 @@ export class BundleDetail extends React.Component {
             </Col>
             <Col md={5}>
               <TextField
-                id='givenInput'
-                ref='given'
+                id='givenInput'                
                 name='given'
                 floatingLabelText='Given Name'
                 hintText='Jane'
@@ -239,8 +240,7 @@ export class BundleDetail extends React.Component {
             </Col>
             <Col md={3}>
               <TextField
-                id='familyInput'
-                ref='family'
+                id='familyInput'                
                 name='family'
                 floatingLabelText='Family Name'
                 hintText='Doe'
@@ -253,8 +253,7 @@ export class BundleDetail extends React.Component {
             </Col>
             <Col md={3}>
               <TextField
-                id='suffixInput'
-                ref='suffix'
+                id='suffixInput'                
                 name='suffix'
                 floatingLabelText='Suffix / Maiden'
                 hintText=''
@@ -268,8 +267,7 @@ export class BundleDetail extends React.Component {
           <Row>
             <Col md={3}>
               <TextField
-                id='maritalStatusInput'
-                ref='maritalStatus'
+                id='maritalStatusInput'                
                 name='maritalStatus'
                 floatingLabelText='Marital Status'
                 hintText='single | maried | other'
@@ -282,8 +280,7 @@ export class BundleDetail extends React.Component {
             </Col>
             <Col md={3}>
               <TextField
-                id='genderInput'
-                ref='gender'
+                id='genderInput'                
                 name='gender'
                 floatingLabelText='Gender'
                 hintText='male | female | unknown'
@@ -296,8 +293,7 @@ export class BundleDetail extends React.Component {
             <Col md={3}>
 
               <TextField
-                id='birthDateInput'
-                ref='birthDate'
+                id='birthDateInput'                
                 name='birthDate'
                 type='date'
                 floatingLabelText='Birthdate'
@@ -320,8 +316,7 @@ export class BundleDetail extends React.Component {
           <Row>
             <Col md={6}>
               <TextField
-                id='photoInput'
-                ref='photo'
+                id='photoInput'                
                 name='photo'
                 floatingLabelText='Photo'
                 hintText='http://somewhere.com/image.jpg'
@@ -333,8 +328,7 @@ export class BundleDetail extends React.Component {
             </Col>
             <Col md={3}>
               <TextField
-                id='speciesInput'
-                ref='species'
+                id='speciesInput'                
                 name='species'
                 floatingLabelText='Species'
                 value={ get(formData, 'species', '')}
@@ -346,8 +340,7 @@ export class BundleDetail extends React.Component {
             </Col>
             <Col md={3}>
               <TextField
-                id='languageInput'
-                ref='language'
+                id='languageInput'                
                 name='language'
                 floatingLabelText='Language'
                 value={ get(formData, 'language', '')}
@@ -360,7 +353,7 @@ export class BundleDetail extends React.Component {
           </Row> */}
 
 
-        </CardText>
+        </CardContent>
         <CardActions>
           { this.determineButtons(this.data.bundleId) }
         </CardActions>
@@ -372,13 +365,13 @@ export class BundleDetail extends React.Component {
     if (bundleId) {
       return (
         <div>
-          <RaisedButton id='updateBundleButton' className='updateBundleButton' label="Save" primary={true} onClick={this.handleSaveButton.bind(this)} style={{marginRight: '20px'}} />
-          <RaisedButton id='deleteBundleButton' label="Delete" onClick={this.handleDeleteButton.bind(this)} />
+          <Button id='updateBundleButton' className='updateBundleButton' primary={true} onClick={this.handleSaveButton.bind(this)} style={{marginRight: '20px'}}>Save</Button>
+          <Button id='deleteBundleButton' onClick={this.handleDeleteButton.bind(this)}>Delete</Button>
         </div>
       );
     } else {
       return(
-        <RaisedButton id='saveBundleButton'  className='saveBundleButton' label="Save" primary={true} onClick={this.handleSaveButton.bind(this)} />
+        <Button id='saveBundleButton'  className='saveBundleButton' primary={true} onClick={this.handleSaveButton.bind(this)}></Button>
       );
     }
   }
@@ -460,13 +453,13 @@ export class BundleDetail extends React.Component {
       Bundles._collection.update({_id: this.state.bundleId}, {$set: fhirBundleData }, function(error, result){
         if (error) {
           if(process.env.NODE_ENV === "test") console.log("Bundles.insert[error]", error);
-          Bert.alert(error.reason, 'danger');
+          // Bert.alert(error.reason, 'danger');
         }
         if (result) {
           HipaaLogger.logEvent({eventType: "update", userId: Meteor.userId(), userName: Meteor.user().fullName(), collectionName: "Bundles", recordId: self.state.bundleId});
           Session.set('selectedBundleId', false);
           Session.set('bundlePageTabIndex', 1);
-          Bert.alert('Bundle added!', 'success');
+          // Bert.alert('Bundle added!', 'success');
         }
       });
     } else {
@@ -475,13 +468,13 @@ export class BundleDetail extends React.Component {
       Bundles._collection.insert(fhirBundleData, function(error, result) {
         if (error) {
           if(process.env.NODE_ENV === "test")  console.log('Bundles.insert[error]', error);
-          Bert.alert(error.reason, 'danger');
+          // Bert.alert(error.reason, 'danger');
         }
         if (result) {
           HipaaLogger.logEvent({eventType: "create", userId: Meteor.userId(), userName: Meteor.user().fullName(), collectionName: "Bundles", recordId: self.state.bundleId});
           Session.set('bundlePageTabIndex', 1);
           Session.set('selectedBundleId', false);
-          Bert.alert('Bundle added!', 'success');
+          // Bert.alert('Bundle added!', 'success');
         }
       });
     }
@@ -496,13 +489,13 @@ export class BundleDetail extends React.Component {
     Bundles._collection.animalremove({_id: this.state.bundleId}, function(error, result){
       if (error) {
         if(process.env.NODE_ENV === "test") console.log('Bundles.insert[error]', error);
-        Bert.alert(error.reason, 'danger');
+        // Bert.alert(error.reason, 'danger');
       }
       if (result) {
         HipaaLogger.logEvent({eventType: "delete", userId: Meteor.userId(), userName: Meteor.user().fullName(), collectionName: "Bundles", recordId: self.state.bundleId});
         Session.set('bundlePageTabIndex', 1);
         Session.set('selectedBundleId', false);
-        Bert.alert('Bundle removed!', 'success');
+        // Bert.alert('Bundle removed!', 'success');
       }
     });
   }
