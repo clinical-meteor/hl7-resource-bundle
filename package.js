@@ -9,7 +9,7 @@ Package.describe({
 Package.onUse(function (api) {
   api.versionsFrom('1.1.0.3');
 
-  api.use('meteor-base');
+  api.use('meteor-base@1.4.0');
   api.use('mongo');
   
   api.use('aldeed:collection2@3.0.0');
