@@ -1,15 +1,23 @@
 import { 
-  Button
+  Button,
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableHead
 } from '@material-ui/core';
 
 import { HTTP } from 'meteor/http';
 import React from 'react';
 import { ReactMeteorData } from 'meteor/react-meteor-data';
 import ReactMixin from 'react-mixin';
-import { Table } from 'react-bootstrap';
+
 import { Session } from 'meteor/session';
 import { get } from 'lodash';
 import PropTypes from 'prop-types';
+
+import moment from 'moment';
+
 
 flattenBundle = function(person){
   let result = {
@@ -110,7 +118,7 @@ export class BundleTable extends React.Component {
   renderRowAvatarHeader(){
     if (get(Meteor, 'settings.public.defaults.avatars') && (this.props.showAvatars === true)) {
       return (
-        <th className='avatar'>photo</th>
+        <TableCell className='avatar'>photo</TableCell>
       );
     }
   }
@@ -119,25 +127,25 @@ export class BundleTable extends React.Component {
     
     if (get(Meteor, 'settings.public.defaults.avatars') && (this.props.showAvatars === true)) {
       return (
-        <td className='avatar'>
+        <TableCell className='avatar'>
           <img src={bundle.photo} ref={bundle._id} onError={ this.imgError.bind(this, bundle._id) } style={avatarStyle}/>
-        </td>
+        </TableCell>
       );
     }
   }
   renderSpeciesHeader(displaySpecies){
     if(displaySpecies){
       return (
-        <th className='species'>Species</th>
+        <TableCell className='species'>Species</TableCell>
       );
     }
   }
   renderSpeciesRow(displaySpecies, bundle){
     if(displaySpecies){
       return (
-        <td className='species' style={this.data.style.cellHideOnPhone}>
+        <TableCell className='species' style={this.data.style.cellHideOnPhone}>
           {bundle.species}
-        </td>
+        </TableCell>
       );
     }
 
@@ -145,16 +153,16 @@ export class BundleTable extends React.Component {
   renderSendButtonHeader(){
     if (this.props.showSendButton === true) {
       return (
-        <th className='sendButton' style={this.data.style.hideOnPhone}></th>
+        <TableCell className='sendButton' style={this.data.style.hideOnPhone}></TableCell>
       );
     }
   }
   renderSendButton(bundle, avatarStyle){
     if (this.props.showSendButton === true) {
       return (
-        <td className='sendButton' style={this.data.style.hideOnPhone}>
+        <TableCell className='sendButton' style={this.data.style.hideOnPhone}>
           <Button onClick={this.onSend.bind('this', this.data.bundles[i]._id)}>Send</Button>
-        </td>
+        </TableCell>
       );
     }
   }
@@ -187,40 +195,39 @@ export class BundleTable extends React.Component {
     let tableRows = [];
     let footer;
 
-    if(this.data.bundles.length === 0){
-      logger.trace('EncountersTable:  No encounters to render.');
-      // footer = <TableNoData noDataPadding={ this.props.noDataMessagePadding } />
-    } else {
-      for (var i = 0; i < this.data.bundles.length; i++) {
-        tableRows.push(
-          <tr key={i} className="bundleRow" style={{cursor: "pointer"}} onClick={this.selectBundleRow.bind(this, this.data.bundles[i].id )} >
-            <td className='identifier' style={this.data.style.cell}>{this.data.bundles[i].identifier}</td>
-            <td className='title' onClick={ this.rowClick.bind('this', this.data.bundles[i]._id)} style={this.data.style.cell}>{this.data.bundles[i].title }</td>
-            <td className='subject' onClick={ this.rowClick.bind('this', this.data.bundles[i]._id)} style={this.data.style.cell}>{this.data.bundles[i].subject }</td>
-            <td className='author' onClick={ this.rowClick.bind('this', this.data.bundles[i]._id)} style={this.data.style.cell}>{this.data.bundles[i].author }</td>
-            <td className='birthDate' onClick={ this.rowClick.bind('this', this.data.bundles[i]._id)} style={{minWidth: '100px', paddingTop: '16px'}}>{this.data.bundles[i].birthDate }</td>
-          </tr>
-        );
-      }
-    }
+    // if(this.data.bundles.length === 0){
+    //   logger.trace('EncountersTable:  No encounters to render.');
+    //   // footer = <TableNoData noDataPadding={ this.props.noDataMessagePadding } />
+    // } else {
+    //   for (var i = 0; i < this.data.bundles.length; i++) {
+    //     tableRows.push(
+    //       <TableRow key={i} className="bundleRow" style={{cursor: "pointer"}} onClick={this.selectBundleRow.bind(this, this.data.bundles[i].id )} >
+    //         <TableCell className='identifier' style={this.data.style.cell}>{this.data.bundles[i].identifier}</TableCell>
+    //         <TableCell className='title' onClick={ this.rowClick.bind('this', this.data.bundles[i]._id)} style={this.data.style.cell}>{this.data.bundles[i].title }</TableCell>
+    //         <TableCell className='subject' onClick={ this.rowClick.bind('this', this.data.bundles[i]._id)} style={this.data.style.cell}>{this.data.bundles[i].subject }</TableCell>
+    //         <TableCell className='author' onClick={ this.rowClick.bind('this', this.data.bundles[i]._id)} style={this.data.style.cell}>{this.data.bundles[i].author }</TableCell>
+    //         <TableCell className='birthDate' onClick={ this.rowClick.bind('this', this.data.bundles[i]._id)} style={{minWidth: '100px', paddingTop: '16px'}}>{this.data.bundles[i].birthDate }</TableCell>
+    //       </TableRow>
+    //     );
+    //   }
+    // }
     
     return(
       <div>
         <Table id='bundlesTable' hover >
-          <thead>
-            <tr>
-              <th className='identifier'>Identifier</th>
-              <th className='author'>Title</th>
-              <th className='subject'>Subject</th>
-              <th className='author'>Author</th>
-              <th className='birthdate' style={{minWidth: '100px'}}>Date</th>
-            </tr>
-          </thead>
-          <tbody>
+          <TableHead>
+            <TableRow>
+              <TableCell className='identifier'>Identifier</TableCell>
+              <TableCell className='author'>Title</TableCell>
+              <TableCell className='subject'>Subject</TableCell>
+              <TableCell className='author'>Author</TableCell>
+              <TableCell className='birthdate' style={{minWidth: '100px'}}>Date</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
             { tableRows }
-          </tbody>
-        </Table>
-        { footer }
+          </TableBody>
+        </Table>        
       </div>
     );
   }

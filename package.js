@@ -1,6 +1,6 @@
 Package.describe({
   name: 'clinical:hl7-resource-bundle',
-  version: '1.6.3',
+  version: '1.6.12',
   summary: 'HL7 FHIR Resource - Bundle',
   git: 'https://github.com/clinical-meteor/hl7-resource-bundle',
   documentation: 'README.md'
@@ -13,10 +13,10 @@ Package.onUse(function (api) {
   api.use('mongo');
   
   api.use('aldeed:collection2@3.0.0');
-  api.use('clinical:hl7-resource-datatypes@4.0.4');
+  api.use('clinical:hl7-resource-datatypes@4.0.5');
 
   api.use('simple:json-routes@2.1.0');
-  api.use('ecmascript@0.9.0');
+  api.use('ecmascript@0.13.0');
   api.use('session');
   api.use('http');
   api.use('react-meteor-data@0.2.15');
@@ -49,13 +49,11 @@ Package.onUse(function (api) {
 
 
 Npm.depends({
-  "@material-ui/core": "3.6.1",
-  "@material-ui/icons": "3.0.1",
   "simpl-schema": "1.5.3",
   "moment": "2.22.2",
-  "lodash": "4.17.4",
+  "lodash": "4.17.13",
   "levee": "1.4.0",
   "wreck": "14.1.4",
-  "material-fhir-ui": "0.9.18",
+  "material-fhir-ui": "0.9.26",
   "winston": "3.2.1"
 })

@@ -5,8 +5,7 @@ import {
   TextField
 } from '@material-ui/core';
 
-import { get, has, set } from 'lodash';
-import { Row, Col } from 'react-bootstrap';
+import { get, set } from 'lodash';
 import moment from 'moment';
 
 import React from 'react';

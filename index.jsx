@@ -4,8 +4,6 @@ import BundlesPage from './client/BundlesPage';
 import BundleTable from './client/BundleTable';
 import BundleDetail from './client/BundleDetail';
 
-import { Bundle, Bundles, BundleSchema } from './lib/Bundles';
-
 var DynamicRoutes = [{
   'name': 'BundlePage',
   'path': '/bundles',
@@ -32,11 +30,7 @@ export {
 
   BundlesPage,
   BundleTable,
-  BundleDetail,
-
-  Bundle,
-  Bundles,
-  BundleSchema
+  BundleDetail
 };
 
 
